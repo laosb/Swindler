@@ -1,6 +1,7 @@
 import AXSwift
 import Cocoa
 import PromiseKit
+import Swindler
 
 // MARK: - Window
 
@@ -37,6 +38,8 @@ public final class Window {
 
     /// The application the window belongs to.
     public var application: Application { return application_ }
+  
+    public var uiElement: AXSwift.UIElement? { return delegate.uiElement }
 
     /// The screen that (most of) the window is on. `nil` if the window is completely off-screen.
     public var screen: Screen? {
@@ -111,6 +114,7 @@ extension String: Defaultable {
 }
 
 protocol WindowDelegate: AnyObject {
+    var uiElement: AXSwift.UIElement? { get }
     var isValid: Bool { get }
 
     // Optional because a WindowDelegate shouldn't hold a strong reference to its parent
@@ -139,6 +143,8 @@ final class OSXWindowDelegate<
     fileprivate var initialized: Promise<Void>!
 
     let axElement: UIElement
+    
+    var uiElement: AXSwift.UIElement? { return axElement as? AXSwift.UIElement }
 
     fileprivate(set) var isValid: Bool = true
 
